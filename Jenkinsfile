@@ -51,7 +51,7 @@ pipeline {
                 bat '''
                 set PATH=%SONAR_SCANNER_PATH%;%PATH%
                 where sonar-scanner || exit /b 1
-                sonar-scanner -Dsonar.projectKey=sonar-web ^
+                sonar-scanner -Dsonar.projectKey=mern-project ^
                     -Dsonar.sources=. ^
                     -Dsonar.host.url=http://localhost:9000 ^
                     -Dsonar.token=%SONAR_TOKEN% || exit /b 1
