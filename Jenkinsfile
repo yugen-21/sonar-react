@@ -18,30 +18,27 @@ pipeline {
  
         stage('Install Dependencies') {
             steps {
-                // Set the PATH and install dependencies using npm
                 bat '''
                 set PATH=%NODEJS_HOME%;%PATH%
-                npm install
+                npm install || exit /b 1
                 '''
             }
         }
  
         stage('Lint') {
             steps {
-                // Run linting to ensure code quality
                 bat '''
                 set PATH=%NODEJS_HOME%;%PATH%
-                npm run lint
+                npm run lint || exit /b 1
                 '''
             }
         }
  
         stage('Build') {
             steps {
-                // Build the React app
                 bat '''
                 set PATH=%NODEJS_HOME%;%PATH%
-                npm run build
+                npm run build || exit /b 1
                 '''
             }
         }
@@ -51,14 +48,13 @@ pipeline {
                 SONAR_TOKEN = credentials('sonar-token') // Accessing the SonarQube token stored in Jenkins credentials
             }
             steps {
-                // Ensure that sonar-scanner is in the PATH
                 bat '''
                 set PATH=%SONAR_SCANNER_PATH%;%PATH%
-                where sonar-scanner || echo "SonarQube scanner not found. Please install it."
+                where sonar-scanner || exit /b 1
                 sonar-scanner -Dsonar.projectKey=sonar-web ^
                     -Dsonar.sources=. ^
                     -Dsonar.host.url=http://localhost:9000 ^
-                    -Dsonar.token=%SONAR_TOKEN% 2>&1
+                    -Dsonar.token=%SONAR_TOKEN% || exit /b 1
                 '''
             }
         }
